@@ -10,7 +10,7 @@ const getSameDomainLinks = async (targetUrl) => {
 
   const links = new Set();
 
-  $('a, script, link[rel="stylesheet"]').each((index, element) => {
+  $('script, link[rel="stylesheet"]').each((index, element) => {
     let href = $(element).attr('href') || $(element).attr('src');
     if (href) {
       // Convert relative URLs to absolute
