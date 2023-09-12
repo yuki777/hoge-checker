@@ -5,13 +5,19 @@ const url = require('url');
 const getSameDomainLinks = async (targetUrl) => {
   const { data } = await axios.get(targetUrl);
   const $ = cheerio.load(data);
-  const targetHostname = url.parse(targetUrl).hostname;
+  const targetUrlParsed = url.parse(targetUrl);
+  const targetHostname = targetUrlParsed.hostname;
 
   const links = new Set();
 
-  $('a').each((index, element) => {
-    const href = $(element).attr('href');
+  $('a, script, link[rel="stylesheet"]').each((index, element) => {
+    let href = $(element).attr('href') || $(element).attr('src');
     if (href) {
+      // Convert relative URLs to absolute
+      if (href.startsWith('/')) {
+        href = url.resolve(targetUrl, href);
+      }
+
       const hostname = url.parse(href).hostname;
 
       if (hostname === targetHostname) {
