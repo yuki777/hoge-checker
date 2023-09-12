@@ -7,14 +7,20 @@ const getSameDomainLinks = async (targetUrl) => {
   const $ = cheerio.load(data);
   const targetHostname = url.parse(targetUrl).hostname;
 
+  const links = new Set();
+
   $('a').each((index, element) => {
     const href = $(element).attr('href');
-    const hostname = url.parse(href).hostname;
+    if (href) {
+      const hostname = url.parse(href).hostname;
 
-    if (hostname === targetHostname) {
-      console.log(href);
+      if (hostname === targetHostname) {
+        links.add(href);
+      }
     }
   });
+
+  links.forEach(link => console.log(link));
 };
 
 const targetUrl = process.argv[2];
